@@ -1,139 +1,260 @@
-# AutoFlow-RAG
+# 🚀 AutoFlow-RAG
 
-AutoFlow-RAG is an enterprise-grade document intelligence and retrieval platform built around the existing Autonomous RAG architecture: React frontend, FastAPI backend, FAISS vector search, JWT authentication, and Gemini-grounded answer generation.
+> Enterprise Retrieval-Augmented Generation (RAG) platform for intelligent document search and grounded AI responses using **React, FastAPI, FAISS, and Google Gemini**.
 
-The product is optimized for grounded question answering over uploaded enterprise documents, with explainable retrieval, document metadata, chat memory, and operational analytics all preserved inside the original architecture.
+<p align="center">
 
----
+![Python](https://img.shields.io/badge/Python-3.11-blue)
+![FastAPI](https://img.shields.io/badge/FastAPI-Backend-green)
+![React](https://img.shields.io/badge/React-Frontend-61DAFB)
+![TypeScript](https://img.shields.io/badge/TypeScript-blue)
+![FAISS](https://img.shields.io/badge/FAISS-Vector_Search-orange)
+![Gemini](https://img.shields.io/badge/Google-Gemini-red)
+![License](https://img.shields.io/badge/License-MIT-yellow)
 
-## What this platform now delivers
-
-- Local vector ingestion with FAISS and sentence-transformer embeddings
-- Document lifecycle management with upload, indexing, chunk counts, and processing status
-- Explainable retrieval with source cards, confidence scoring, chunk previews, latency, and similarity evidence
-- Multi-document retrieval support and conversational history for follow-up questions
-- Analytics and system health monitoring for operational visibility
-- Commercial-quality UI patterns with loading states, notifications, and responsive layouts
-
----
-
-## Architecture
-
-- Frontend: React + Vite + TypeScript + Zustand + Chakra UI
-- Backend: FastAPI + SQLAlchemy + JWT + Pydantic
-- Retrieval: FAISS + LangChain + local sentence-transformer embeddings
-- LLM: Google Gemini via the official SDK
+</p>
 
 ---
 
-## Production readiness checklist
+# 📖 Overview
 
-- Document ingestion and metadata enrichment are completed through the existing upload flow
-- Retrieval metadata is exposed back to the UI as human-readable evidence
-- File and chat lifecycle analytics surface meaningful operational telemetry
-- The codebase is aligned with a clean service boundary and existing deployment flow
+AutoFlow-RAG is a production-ready Retrieval-Augmented Generation (RAG) platform that enables users to upload enterprise documents, build a semantic knowledge base, and receive accurate, source-backed AI responses.
 
----
-
-## Quick Start
-
-### 1. Requirements
-- Python 3.9+
-- Node.js 18+
-- Google Gemini API Key (`GEMINI_API_KEY`)
-- Optional: `VITE_ADMIN_TOKEN` for protected admin reset actions
+The system combines **FastAPI**, **React**, **FAISS vector search**, **Sentence Transformer embeddings**, and **Google Gemini** to provide explainable, low-latency document intelligence while minimizing hallucinations.
 
 ---
 
-## 🚀 Quick Setup Checklist
+# ✨ Key Features
 
-1. **Get a Gemini API Key**: From [Google AI Studio](https://aistudio.google.com/).
-2. **Configure backend environment variables** in `backend/.env`.
-3. **Configure optional frontend admin token** in `frontend/.env` if you want to protect the app reset endpoint.
-4. **Set up backend** (Python, FastAPI)
-5. **Set up frontend** (Node.js, Vite)
-6. **Open the app** in your browser: [http://localhost:5173](http://localhost:5173)
-
----
-
-### 2. Backend Setup (FastAPI)
-- **Create and activate a virtual environment:**
-  ```bash
-  cd backend
-  python -m venv .venv
-  source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-  ```
-- **Configure backend environment variables:**
-  Create or update `backend/.env` with:
-  ```env
-  GEMINI_API_KEY=your_gemini_api_key_here
-  JWT_SECRET_KEY=super-secret-jwt-key-for-production
-  CHAT_RAG_ADMIN_TOKEN=supersecret
-  CORS_ALLOWED_ORIGINS=http://localhost:5173,http://127.0.0.1:5173
-  FAISS_PATH=./data/faiss_index
-  UPLOAD_DIR=./data/files
-  ```
-  - `GEMINI_API_KEY` is required for the Gemini LLM.
-  - `JWT_SECRET_KEY` should be changed in production.
-  - `CHAT_RAG_ADMIN_TOKEN` secures admin reset calls.
-  - `CORS_ALLOWED_ORIGINS` controls frontend access.
-- **Install Python dependencies:**
-  ```bash
-  pip install --upgrade pip
-  pip install -r requirements.txt
-  ```
-- **Start the backend server:**
-  ```bash
-  uvicorn app.main:app --reload --reload-dir app --reload-exclude venv --reload-exclude **/site-packages/**
-  ```
-  - The backend API will be available at: [http://localhost:8000/api](http://localhost:8000/api)
-
-### 3. Frontend Setup (Vite)
-- **Create optional frontend `.env`:**
-  ```env
-  VITE_ADMIN_TOKEN=supersecret
-  ```
-  - This is used by the frontend admin reset UI only.
-- **Install Node.js dependencies:**
-  ```bash
-  cd frontend
-  npm install
-  ```
-- **Start the frontend dev server:**
-  ```bash
-  npm run dev
-  ```
-  - The frontend app will be available at: [http://localhost:5173](http://localhost:5173)
+- 📄 PDF & document upload
+- 🧠 Automatic text chunking and embedding generation
+- 🔍 Semantic search using FAISS
+- 🤖 Google Gemini-powered grounded responses
+- 📚 Source-backed answers with citations
+- 📊 Analytics dashboard
+- 📁 Document management
+- 💬 Multi-turn conversational chat
+- 🔐 JWT Authentication
+- ⚡ FastAPI backend
+- 🎨 Responsive React frontend
+- 🛡️ Hallucination prevention using Retrieval-Augmented Generation
 
 ---
 
-## 4. Docker Deployment
-- **Build and start services:**
-  ```bash
-  docker compose up --build
-  ```
-- **Backend:** `http://localhost:8000/api`
-- **Frontend:** `http://localhost:3000`
-- **Notes:**
-  - `frontend` is served from Nginx on port `3000`.
-  - `backend` uses the `.env` file mounted by `docker-compose.yml`.
-  - Update `docker-compose.yml` or `backend/.env` for custom production values.
+# 📸 Screenshots
 
-## 5. Verification
-- Frontend build: `cd frontend && npm run build`
-- Frontend lint: `cd frontend && npm run lint`
-- Backend tests: `cd backend && pytest`
-- Docker: `docker compose up --build`
+## Chat Interface
 
-## Architecture
-
-- **Frontend**: Vite + React + TypeScript + Zustand + Chakra UI
-- **Backend**: FastAPI + SQLAlchemy + LangChain + ChromaDB + Google GenAI SDK
-- **Embeddings**: Sentence Transformers (`sentence-transformers/all-MiniLM-L6-v2`) via `HuggingFaceEmbeddings`
-- **LLM**: Google Gemini 2.5 Flash (`gemini-2.5-flash`) via `google-genai`
-- **RAG Pipeline**: Chunking, local embedding, hybrid retrieval, and chat with sources
+![Chat Interface](screenshots/home.png)
 
 ---
 
-## License
-[MIT](LICENSE)
+## Analytics Dashboard
+
+![Analytics](screenshots/analytics.png)
+
+---
+
+## Hallucination Prevention
+
+![Hallucination Prevention](screenshots/hallucination.png)
+
+---
+
+## System Architecture
+
+![Architecture](screenshots/architecture.png)
+
+---
+
+# 🏗️ Architecture
+
+```text
+                Upload Documents
+                       │
+                       ▼
+            Text Extraction & Parsing
+                       │
+                       ▼
+                 Text Chunking
+                       │
+                       ▼
+          Sentence Transformer Embeddings
+                       │
+                       ▼
+                 FAISS Vector Store
+                       │
+                       ▼
+              Semantic Similarity Search
+                       │
+                       ▼
+          Google Gemini (Grounded Prompt)
+                       │
+                       ▼
+          Source-backed AI Response
+```
+
+---
+
+# 🛠️ Tech Stack
+
+## Frontend
+
+- React
+- TypeScript
+- Vite
+- Chakra UI
+- Zustand
+
+## Backend
+
+- FastAPI
+- SQLAlchemy
+- JWT Authentication
+- Pydantic
+
+## AI & Retrieval
+
+- Google Gemini
+- FAISS
+- LangChain
+- Sentence Transformers
+
+## Database
+
+- SQLite
+
+## DevOps
+
+- Docker
+- Docker Compose
+
+---
+
+# 📂 Project Structure
+
+```text
+AutoFlow-RAG
+│
+├── backend/
+├── frontend/
+├── data/
+├── screenshots/
+├── docker-compose.yml
+├── README.md
+└── LICENSE
+```
+
+---
+
+# 🚀 Installation
+
+## Clone Repository
+
+```bash
+git clone https://github.com/YOUR_USERNAME/AutoFlow-RAG.git
+
+cd AutoFlow-RAG
+```
+
+---
+
+## Backend
+
+```bash
+cd backend
+
+python -m venv .venv
+
+# Windows
+.venv\Scripts\activate
+
+# Linux/macOS
+source .venv/bin/activate
+
+pip install -r requirements.txt
+
+uvicorn app.main:app --reload
+```
+
+---
+
+## Frontend
+
+```bash
+cd frontend
+
+npm install
+
+npm run dev
+```
+
+---
+
+## Docker
+
+```bash
+docker compose up --build
+```
+
+---
+
+# ⚙️ Environment Variables
+
+Backend `.env`
+
+```env
+GEMINI_API_KEY=your_api_key
+JWT_SECRET_KEY=your_secret
+CHAT_RAG_ADMIN_TOKEN=your_admin_token
+```
+
+Frontend `.env`
+
+```env
+VITE_ADMIN_TOKEN=your_admin_token
+```
+
+---
+
+# 📊 Features
+
+- Semantic document retrieval
+- Explainable AI responses
+- Source citations
+- Analytics dashboard
+- Chunk statistics
+- Upload status
+- Conversation history
+- Multi-document search
+- JWT authentication
+- Responsive UI
+
+---
+
+# 🎯 Future Improvements
+
+- OCR Support
+- Image Retrieval
+- Hybrid Search
+- Cloud Storage Integration
+- Multi-user Workspace
+- Role-Based Access Control
+- Streaming Responses
+- Azure/OpenAI Support
+
+---
+
+# 📜 License
+
+This project is licensed under the MIT License.
+
+---
+
+# 👨‍💻 Author
+
+**Varun Venugopal**
+
+Computer Science Engineering Student
+
+GitHub: https://github.com/YOUR_USERNAME
