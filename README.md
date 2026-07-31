@@ -253,7 +253,7 @@ This project is licensed under the MIT License.
 
 # 👨‍💻 Author
 
-**Varun Venugopal**
+**Varun PV**
 
 Computer Science Engineering Student
 
