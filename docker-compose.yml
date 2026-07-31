@@ -1,0 +1,37 @@
+version: '3.9'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: autoflow-rag-backend
+    env_file:
+      - ./backend/.env
+    environment:
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-autoflow-rag-secret-change-me}
+      - FAISS_PATH=/app/data/faiss_index
+      - UPLOAD_DIR=/data/files
+    volumes:
+      - faiss_data:/app/data/faiss_index
+      - upload_data:/data/files
+      - sqlite_data:/app/data
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: autoflow-rag-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  faiss_data:
+  upload_data:
+  sqlite_data:
