@@ -1,0 +1,30 @@
+# Python virtual environment — never copy into image
+venv/
+.venv/
+
+# Local secrets — must be supplied via env_file in docker-compose.yml
+.env
+.env.*
+
+# Local data — these are volume-mounted at runtime, not baked into the image
+data/
+
+# Test cache and artifacts
+.pytest_cache/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# SQLite databases — volume-mounted at runtime
+*.db
+*.sqlite3
+
+# Editor and OS noise
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Git
+.git/
+.gitignore

@@ -76,10 +76,12 @@ def chat_service(
     if not db_files:
         safe_log_gotcha(f"[Chat] No files in DB for user={user_id} at {datetime.now().isoformat()}")
         return {"answer": "No files are available for answering. Please upload a file first.", "sources": []}
-    # Metadata filter by file_id if provided
+    # Multi-user isolation: build metadata_filter with user_id and optional file_id
+    if metadata_filter is None:
+        metadata_filter = {}
+    if user_id is not None:
+        metadata_filter["user_id"] = user_id
     if file_id:
-        if metadata_filter is None:
-            metadata_filter = {}
         metadata_filter["file_id"] = file_id
 
     retrieval_started_at = time.time()

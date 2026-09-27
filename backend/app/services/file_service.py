@@ -11,7 +11,9 @@ import shutil
 import uuid
 from pathlib import Path
 
-UPLOAD_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../data/files"))
+from app.config import settings
+
+UPLOAD_DIR = settings.UPLOAD_DIR
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 
@@ -54,6 +56,13 @@ def upload_file(file: UploadFile = File(...), db: Session = Depends(), user_id: 
         file.file.seek(0)
     except Exception:
         file_size_bytes = 0
+
+    max_bytes = settings.MAX_UPLOAD_SIZE_MB * 1024 * 1024
+    if file_size_bytes > max_bytes:
+        raise HTTPException(
+            status_code=413,
+            detail=f"File size exceeds maximum allowed limit of {settings.MAX_UPLOAD_SIZE_MB}MB."
+        )
 
     file_id = str(uuid.uuid4())
     save_path = os.path.join(UPLOAD_DIR, f"{file_id}_{file.filename}")

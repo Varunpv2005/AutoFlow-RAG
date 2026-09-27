@@ -149,12 +149,12 @@ class GeminiService:
 
     def health_check(self) -> Tuple[bool, str, str]:
         """
-        Verifies connectivity to Google Gemini API (checks API Key configuration without calling generate_content).
+        Verifies LLM configuration (checks API Key configuration without making outbound LLM API calls).
         Returns (is_ok, status_message, model_name).
         """
         if self.api_key and len(self.api_key) > 5:
-            return True, "Connected", self.model_name
-        return False, "Not Connected", self.model_name
+            return True, "Configured", self.model_name
+        return False, "Unconfigured", self.model_name
 
 
 # Global singleton instance for application use

@@ -218,7 +218,10 @@ def upload_file(
     # Ingest into RAG pipeline
     try:
         ingest_started_at = time.time()
-        chunk_count = rag_pipeline.ingest(db_file.filepath, metadata={"file_id": db_file.id, "filename": db_file.filename})
+        chunk_count = rag_pipeline.ingest(
+            db_file.filepath,
+            metadata={"file_id": db_file.id, "filename": db_file.filename, "user_id": db_file.user_id}
+        )
         ingest_duration = round(time.time() - ingest_started_at, 3)
         db_file.chunk_count = chunk_count or 0
         db_file.is_indexed = 1
@@ -503,15 +506,12 @@ def get_activity(db: Session = Depends(get_db), current_user: User = Depends(get
 @app.get("/api/analytics")
 def get_analytics(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     """
-    Analytics dashboard statistics.
+    Analytics dashboard statistics scoped to the authenticated user.
     """
-    total_users = db.query(User).count()
-    total_docs = db.query(DBFile).count()
     user_docs = db.query(DBFile).filter(DBFile.user_id == current_user.id).count()
-    total_chats = db.query(ChatHistory).count()
     user_chats = db.query(ChatHistory).filter(ChatHistory.user_id == current_user.id).count()
-    indexed_docs = db.query(DBFile).filter(DBFile.is_indexed == 1).count()
-    pending_docs = total_docs - indexed_docs
+    user_indexed_docs = db.query(DBFile).filter(DBFile.user_id == current_user.id, DBFile.is_indexed == 1).count()
+    user_pending_docs = user_docs - user_indexed_docs
 
     faiss_chunks = 0
     if rag_pipeline.vectorstore is not None:
@@ -530,14 +530,14 @@ def get_analytics(db: Session = Depends(get_db), current_user: User = Depends(ge
     faiss_ok = rag_pipeline.vectorstore is not None
 
     return {
-        "users": total_users,
-        "total_documents": total_docs,
+        "users": 1,
+        "total_documents": user_docs,
         "user_documents": user_docs,
-        "total_chats": total_chats,
+        "total_chats": user_chats,
         "user_chats": user_chats,
         "chunks": faiss_chunks,
-        "indexed_documents": indexed_docs,
-        "pending_documents": pending_docs,
+        "indexed_documents": user_indexed_docs,
+        "pending_documents": user_pending_docs,
         "total_queries": analytics.total_queries,
         "average_retrieval_latency": analytics.average_retrieval_latency,
         "average_llm_response_time": analytics.average_llm_response_time,

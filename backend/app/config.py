@@ -48,9 +48,13 @@ class Settings(BaseSettings):
     FAISS_PATH: str = os.path.abspath(os.path.join(os.path.dirname(__file__), "./data/faiss_index"))
     UPLOAD_DIR: str = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../data/files"))
 
+    # Upload configuration
+    MAX_UPLOAD_SIZE_MB: int = 25
+
     # Admin configuration
-    CHAT_RAG_ADMIN_TOKEN: str = "supersecret"
-    JWT_SECRET_KEY: str = "autoflow-rag-secret-key-change-in-production"
+    # These MUST be set via backend/.env — no default secrets are provided.
+    CHAT_RAG_ADMIN_TOKEN: str = ""
+    JWT_SECRET_KEY: str = ""
 
     # CORS configuration
     CORS_ALLOWED_ORIGINS: str = "http://localhost:3000,http://localhost:5173,http://127.0.0.1:3000,http://127.0.0.1:5173"

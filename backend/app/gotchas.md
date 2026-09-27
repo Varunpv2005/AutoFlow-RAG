@@ -5,7 +5,7 @@
 - If you see `Textual SQL expression 'SELECT 1' should be explicitly declared as text('SELECT 1')`, you must wrap raw SQL in `text()` with SQLAlchemy 2.x+.
 
 ## Vectorstore
-- Chroma delete API may not fully clear in-memory cache; after delete, always re-initialize vectorstore.
+- FAISS vectorstore persistence relies on `save_local` and `load_local`. Re-indexing wipes existing index files cleanly.
 
 ## Admin Token
 - Admin token must be 8–128 characters, only alphanumeric, dash, or underscore. Invalid tokens return 422.

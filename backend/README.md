@@ -10,10 +10,10 @@ This backend implements a Retrieval-Augmented Generation (RAG) chat application 
 ## Architecture Overview
 
 - **API Framework:** FastAPI (Python)
-- **RAG Pipeline:** LangChain & ChromaDB (file parsing, chunking, embedding, hybrid retrieval, LLM orchestration)
+- **RAG Pipeline:** LangChain & FAISS (file parsing, chunking, local embedding, semantic retrieval, LLM orchestration)
 - **LLM:** Google Gemini 2.5 Flash (`gemini-2.5-flash`) via `google-genai` SDK
-- **Embeddings:** Google Gemini Embeddings (`gemini-embedding-001`)
-- **Vector Store:** ChromaDB (disk-based)
+- **Embeddings:** Local Sentence Transformers (`sentence-transformers/all-MiniLM-L6-v2`)
+- **Vector Store:** FAISS (disk-backed)
 - **User/File Metadata:** SQLite (via SQLAlchemy)
 - **File Storage:** Local filesystem
 - **Configuration:** Centralized `app/config.py` using `pydantic-settings`
@@ -28,7 +28,7 @@ This backend implements a Retrieval-Augmented Generation (RAG) chat application 
 │   ├── config.py          # Centralized configuration & single-point LLM setting
 │   ├── api/               # API route modules
 │   ├── db/                # DB models and session
-│   ├── rag/               # RAG pipeline (LangChain, Gemini Embeddings, ChromaDB)
+│   ├── rag/               # RAG pipeline (LangChain, Sentence Transformers, FAISS)
 │   ├── error_handlers.py  # Centralized error handling
 │   ├── log_utils.py       # Logging for gotchas/ops
 │   ├── schemas.py         # Pydantic models
@@ -40,7 +40,7 @@ This backend implements a Retrieval-Augmented Generation (RAG) chat application 
 │   ├── gotchas.md         # Backend-specific gotchas
 │   ├── implementation_details.md # Backend implementation notes
 │   └── quick_reference.md # Backend quick reference
-├── data/                  # SQLite DB and ChromaDB storage
+├── data/                  # SQLite DB and FAISS index storage
 ├── requirements.txt
 └── README.md
 ```
@@ -49,11 +49,11 @@ This backend implements a Retrieval-Augmented Generation (RAG) chat application 
 
 ## Key Features
 - High-speed inference using Google Gemini 2.5 Flash.
-- Embeddings powered by `gemini-embedding-001`.
+- Embeddings powered locally by `sentence-transformers/all-MiniLM-L6-v2`.
 - Clean separation of concerns with `gemini_service` and `config.py`.
-- Health checks verifying SQLite DB, ChromaDB vector store, and Gemini API connectivity.
+- Health checks verifying SQLite DB, FAISS vector store, and Gemini configuration status.
 - SQLite is used for user and file metadata.
-- ChromaDB stores vector embeddings on disk.
+- FAISS stores vector embeddings on disk.
 
 ---
 

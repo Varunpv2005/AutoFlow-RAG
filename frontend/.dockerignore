@@ -1,0 +1,21 @@
+# Node modules — reinstalled by npm ci inside Docker
+node_modules/
+
+# Build artifacts
+dist/
+.vite/
+build/
+
+# Local environment files
+.env
+.env.*
+.env.local
+
+# Editor and OS noise
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Git
+.git/
+.gitignore

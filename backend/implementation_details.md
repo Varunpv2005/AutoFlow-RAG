@@ -9,7 +9,8 @@ _Last updated: 2026-07-28_
 - All Ollama dependencies (`ollama`, `langchain-ollama`, `ChatOllama`, `OllamaLLM`) have been completely removed.
 - Single-point configuration management implemented in `backend/app/config.py`.
 - Dedicated reusable service module created at `backend/app/services/gemini_service.py`.
-- Embeddings migrated to `gemini-embedding-001`.
+- Embeddings migrated to `sentence-transformers/all-MiniLM-L6-v2`.
+- Vector store migrated to FAISS.
 - API endpoints (`/api/health`, `/api/chat`, `/api/upload`, `/api/files`) maintain 100% contract and frontend compatibility.
 
 ---
@@ -20,9 +21,9 @@ _Last updated: 2026-07-28_
 ---
 
 ## Service Architecture
-- `config.py`: Uses `pydantic-settings` to load `.env` variables cleanly (`GEMINI_API_KEY`, `GEMINI_MODEL`, `GEMINI_EMBEDDING_MODEL`, `CHROMA_PATH`, `UPLOAD_DIR`).
-- `gemini_service.py`: Implements `GeminiService` (sync & async generation, health check) and `GeminiEmbeddings` (LangChain-compatible embeddings wrapper for ChromaDB).
-- `rag/pipeline.py`: Configured to use `gemini_service` embeddings and LLM seamlessly.
+- `config.py`: Uses `pydantic-settings` to load `.env` variables cleanly (`GEMINI_API_KEY`, `GEMINI_MODEL`, `FAISS_PATH`, `UPLOAD_DIR`).
+- `gemini_service.py`: Implements `GeminiService` (sync & async generation, health check) for Google GenAI LLM.
+- `rag/pipeline.py`: Configured to use `HuggingFaceEmbeddings` and FAISS for vector operations.
 
 ---
 

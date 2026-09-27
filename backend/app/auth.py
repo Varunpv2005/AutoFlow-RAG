@@ -1,4 +1,6 @@
+import logging
 import os
+import secrets
 from datetime import datetime, timedelta
 from typing import Optional
 import bcrypt
@@ -10,8 +12,9 @@ from app.db.session import get_db
 from app.db.models import User
 from app.config import settings
 
+_logger = logging.getLogger(__name__)
+
 DEFAULT_SECRET_KEY = "autoflow-rag-secret-key-change-in-production"
-SECRET_KEY = settings.JWT_SECRET_KEY or DEFAULT_SECRET_KEY
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24  # 24 hours
 
@@ -23,7 +26,39 @@ def validate_secret_key(secret_key: str, environment: Optional[str] = None) -> s
     return secret_key
 
 
-SECRET_KEY = validate_secret_key(SECRET_KEY)
+def _resolve_secret_key() -> str:
+    """
+    Resolve the effective JWT secret key.
+    - If JWT_SECRET_KEY is configured in .env, use it.
+    - If empty and ENVIRONMENT=production, raise at startup so the server refuses to start.
+    - If empty and ENVIRONMENT!=production, generate a random ephemeral key with a warning
+      (tokens will be invalidated on every restart — acceptable in development only).
+    """
+    configured = settings.JWT_SECRET_KEY.strip()
+    environment = os.environ.get("ENVIRONMENT", "development").lower()
+
+    if configured:
+        validate_secret_key(configured)
+        return configured
+
+    if environment == "production":
+        raise RuntimeError(
+            "JWT_SECRET_KEY is not set. "
+            "Set JWT_SECRET_KEY in backend/.env before starting in production."
+        )
+
+    # Development fallback — ephemeral key, tokens are invalidated on restart
+    ephemeral = secrets.token_hex(32)
+    _logger.warning(
+        "JWT_SECRET_KEY is not configured. "
+        "Using a random ephemeral key for this session (development only). "
+        "Set JWT_SECRET_KEY in backend/.env to persist sessions across restarts."
+    )
+    return ephemeral
+
+
+SECRET_KEY = _resolve_secret_key()
+
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 

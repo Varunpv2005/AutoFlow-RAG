@@ -5,7 +5,7 @@ _Last updated: 2026-07-28_
 ## Architecture & Integration
 - **LLM**: Google Gemini 2.5 Flash (`gemini-2.5-flash`) via `google-genai` SDK for answer generation.
 - **Embeddings**: Local `sentence-transformers/all-MiniLM-L6-v2` via LangChain's `HuggingFaceEmbeddings`.
-- **Vector Store**: ChromaDB (local, disk-based at `backend/app/data/chroma_db`).
+- **Vector Store**: FAISS (local, disk-based at `backend/app/data/faiss_index`).
 - **Quota Protection**: All document parsing, chunking, and vector embedding creation happen locally on CPU/GPU without making API calls to Gemini embedding endpoints.
 
 ## Config & Service Architecture

@@ -1,139 +1,150 @@
-# AutoFlow-RAG
+# AutoFlow-RAG — Autonomous AI Task Execution Engine
 
-AutoFlow-RAG is an enterprise-grade document intelligence and retrieval platform built around the existing Autonomous RAG architecture: React frontend, FastAPI backend, FAISS vector search, JWT authentication, and Gemini-grounded answer generation.
+AutoFlow-RAG is a deployment-ready document intelligence and retrieval application built around a robust RAG architecture: React frontend, FastAPI backend, FAISS vector store, JWT authentication, local Sentence Transformer embeddings, and Google Gemini 2.5 Flash for grounded answer generation.
 
-The product is optimized for grounded question answering over uploaded enterprise documents, with explainable retrieval, document metadata, chat memory, and operational analytics all preserved inside the original architecture.
+The system supports end-to-end question answering over uploaded documents (PDF, DOCX, TXT, CSV, XLSX) with user-scoped isolation, transparent retrieval score tracking, document metadata extraction, persistent chat memory, and operational analytics.
 
----
-
-## What this platform now delivers
-
-- Local vector ingestion with FAISS and sentence-transformer embeddings
-- Document lifecycle management with upload, indexing, chunk counts, and processing status
-- Explainable retrieval with source cards, confidence scoring, chunk previews, latency, and similarity evidence
-- Multi-document retrieval support and conversational history for follow-up questions
-- Analytics and system health monitoring for operational visibility
-- Commercial-quality UI patterns with loading states, notifications, and responsive layouts
+Repository: [https://github.com/Varunpv2005/AutoFlow-RAG](https://github.com/Varunpv2005/AutoFlow-RAG)
 
 ---
 
-## Architecture
+## Key Features
 
-- Frontend: React + Vite + TypeScript + Zustand + Chakra UI
-- Backend: FastAPI + SQLAlchemy + JWT + Pydantic
-- Retrieval: FAISS + LangChain + local sentence-transformer embeddings
-- LLM: Google Gemini via the official SDK
-
----
-
-## Production readiness checklist
-
-- Document ingestion and metadata enrichment are completed through the existing upload flow
-- Retrieval metadata is exposed back to the UI as human-readable evidence
-- File and chat lifecycle analytics surface meaningful operational telemetry
-- The codebase is aligned with a clean service boundary and existing deployment flow
+- **Document Processing & Chunking**: Upload and parse PDF, DOCX, TXT, CSV, and XLSX files with adaptive header/character chunking.
+- **Local Embeddings & FAISS Vector Search**: High-performance embedding generation via `sentence-transformers/all-MiniLM-L6-v2` stored in a disk-persisted FAISS index.
+- **User Data Isolation**: Implemented user-scoped retrieval by attaching `user_id` metadata to FAISS chunks and filtering retrieved candidates against the authenticated user's identity.
+- **Scored Retrieval & Source Citations**: Real retrieval similarity scores calculated from FAISS distance (`1 / (1 + distance)`) presented alongside chunk previews and document page references.
+- **Grounded Gemini LLM Answers**: Prompt-constrained Gemini 2.5 Flash completions that refuse out-of-context queries to prevent AI hallucinations.
+- **JWT Authentication & Security**: Password hashing with bcrypt, stateless JWT authorization headers, configurable CORS, and upload file size validation (`MAX_UPLOAD_SIZE_MB`).
+- **User Analytics & Observability**: Scoped workspace telemetry tracking user document allocation, chat history, latency metrics, and infrastructure health.
+- **SSE Incremental Delivery**: Server-Sent Events endpoint (`/api/chat/stream`) delivering answer tokens with done/error event metadata.
 
 ---
 
-## Quick Start
+## Technology Stack
 
-### 1. Requirements
-- Python 3.9+
-- Node.js 18+
-- Google Gemini API Key (`GEMINI_API_KEY`)
-- Optional: `VITE_ADMIN_TOKEN` for protected admin reset actions
-
----
-
-## 🚀 Quick Setup Checklist
-
-1. **Get a Gemini API Key**: From [Google AI Studio](https://aistudio.google.com/).
-2. **Configure backend environment variables** in `backend/.env`.
-3. **Configure optional frontend admin token** in `frontend/.env` if you want to protect the app reset endpoint.
-4. **Set up backend** (Python, FastAPI)
-5. **Set up frontend** (Node.js, Vite)
-6. **Open the app** in your browser: [http://localhost:5173](http://localhost:5173)
+- **Frontend**: React, TypeScript, Vite, Chakra UI, Zustand
+- **Backend**: Python 3.11, FastAPI, SQLAlchemy, Pydantic, Pytest
+- **Database & Storage**: SQLite (local metadata), FAISS (vector index persistence), Local Filesystem
+- **LLM & Embeddings**: Google Gemini 2.5 Flash (`google-genai` SDK), Sentence Transformers (`all-MiniLM-L6-v2`) via `HuggingFaceEmbeddings`
+- **Infrastructure**: Docker, Docker Compose, Nginx
 
 ---
 
-### 2. Backend Setup (FastAPI)
-- **Create and activate a virtual environment:**
-  ```bash
-  cd backend
-  python -m venv .venv
-  source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-  ```
-- **Configure backend environment variables:**
-  Create or update `backend/.env` with:
-  ```env
-  GEMINI_API_KEY=your_gemini_api_key_here
-  JWT_SECRET_KEY=super-secret-jwt-key-for-production
-  CHAT_RAG_ADMIN_TOKEN=supersecret
-  CORS_ALLOWED_ORIGINS=http://localhost:5173,http://127.0.0.1:5173
-  FAISS_PATH=./data/faiss_index
-  UPLOAD_DIR=./data/files
-  ```
-  - `GEMINI_API_KEY` is required for the Gemini LLM.
-  - `JWT_SECRET_KEY` should be changed in production.
-  - `CHAT_RAG_ADMIN_TOKEN` secures admin reset calls.
-  - `CORS_ALLOWED_ORIGINS` controls frontend access.
-- **Install Python dependencies:**
-  ```bash
-  pip install --upgrade pip
-  pip install -r requirements.txt
-  ```
-- **Start the backend server:**
-  ```bash
-  uvicorn app.main:app --reload --reload-dir app --reload-exclude venv --reload-exclude **/site-packages/**
-  ```
-  - The backend API will be available at: [http://localhost:8000/api](http://localhost:8000/api)
+## Architecture Overview
 
-### 3. Frontend Setup (Vite)
-- **Create optional frontend `.env`:**
-  ```env
-  VITE_ADMIN_TOKEN=supersecret
-  ```
-  - This is used by the frontend admin reset UI only.
-- **Install Node.js dependencies:**
-  ```bash
-  cd frontend
-  npm install
-  ```
-- **Start the frontend dev server:**
-  ```bash
-  npm run dev
-  ```
-  - The frontend app will be available at: [http://localhost:5173](http://localhost:5173)
+```
+[ React + Vite Frontend ]
+           │ (HTTP / SSE with JWT Bearer Token)
+           ▼
+   [ FastAPI Backend ]
+    ├── Auth & Security (JWT, bcrypt)
+    ├── User Isolation Middleware & Scoped Analytics
+    ├── Document Ingestion & Adaptive Chunker
+    ├── FAISS Vectorstore (all-MiniLM-L6-v2 embeddings)
+    └── Gemini Service (Google GenAI SDK)
+           │
+           ▼
+[ SQLite DB & FAISS Index ]
+```
 
 ---
 
-## 4. Docker Deployment
-- **Build and start services:**
-  ```bash
-  docker compose up --build
-  ```
-- **Backend:** `http://localhost:8000/api`
-- **Frontend:** `http://localhost:3000`
-- **Notes:**
-  - `frontend` is served from Nginx on port `3000`.
-  - `backend` uses the `.env` file mounted by `docker-compose.yml`.
-  - Update `docker-compose.yml` or `backend/.env` for custom production values.
+## Quick Start (Local Development)
 
-## 5. Verification
-- Frontend build: `cd frontend && npm run build`
-- Frontend lint: `cd frontend && npm run lint`
-- Backend tests: `cd backend && pytest`
-- Docker: `docker compose up --build`
+### 1. Environment Setup
 
-## Architecture
+Copy `.env.example` to `backend/.env`:
 
-- **Frontend**: Vite + React + TypeScript + Zustand + Chakra UI
-- **Backend**: FastAPI + SQLAlchemy + LangChain + ChromaDB + Google GenAI SDK
-- **Embeddings**: Sentence Transformers (`sentence-transformers/all-MiniLM-L6-v2`) via `HuggingFaceEmbeddings`
-- **LLM**: Google Gemini 2.5 Flash (`gemini-2.5-flash`) via `google-genai`
-- **RAG Pipeline**: Chunking, local embedding, hybrid retrieval, and chat with sources
+```bash
+cp .env.example backend/.env
+```
+
+Configure `backend/.env`:
+```env
+GEMINI_API_KEY=your_gemini_api_key_here
+JWT_SECRET_KEY=your_jwt_secret_key_here
+CHAT_RAG_ADMIN_TOKEN=your_admin_token_here
+CORS_ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5173,http://127.0.0.1:3000,http://127.0.0.1:5173
+GEMINI_MODEL=gemini-2.5-flash
+MAX_UPLOAD_SIZE_MB=25
+```
+
+### 2. Backend Setup
+
+```bash
+cd backend
+python -m venv venv
+# On Windows:
+venv\Scripts\activate
+# On Linux/macOS:
+source venv/bin/activate
+
+pip install -r requirements.txt
+uvicorn app.main:app --reload --port 8000
+```
+
+Backend API: `http://localhost:8000/api`
+
+### 3. Frontend Setup
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Frontend UI: `http://localhost:5173`
+
+---
+
+## Docker Setup & Deployment
+
+Run using Docker Compose:
+
+```bash
+docker compose build --no-cache
+docker compose up -d
+```
+
+- **Frontend UI**: `http://localhost:3000`
+- **Backend API**: `http://localhost:8000/api`
+- **Backend Health Check**: `http://localhost:8000/api/health`
+
+
+## Cloud Production Deployment
+
+AutoFlow-RAG includes a `render.yaml` Blueprint for 1-click cloud deployment on platforms like Render or Fly.io:
+
+### 1. Environment Variable Requirements
+Set the following environment variables on your cloud backend service:
+- `GEMINI_API_KEY`: Your Google Gemini API Key.
+- `JWT_SECRET_KEY`: High-entropy random secret key for signing JWT tokens.
+- `CHAT_RAG_ADMIN_TOKEN`: Secret token required for administrative endpoints.
+- `CORS_ALLOWED_ORIGINS`: Comma-separated list of allowed frontend origins (e.g., `https://autoflow-rag-frontend.onrender.com`).
+- `GEMINI_MODEL`: Model name, defaults to `gemini-2.5-flash`.
+- `MAX_UPLOAD_SIZE_MB`: Max file upload size in MB, defaults to `25`.
+
+### 2. Deployment via Render
+1. Connect your GitHub repository (`Varunpv2005/AutoFlow-RAG`) to Render.
+2. Select **New > Blueprint**.
+3. Render automatically detects `render.yaml` and configures `autoflow-rag-backend` and `autoflow-rag-frontend`.
+4. Enter your `GEMINI_API_KEY` when prompted in the Render Dashboard.
+5. Deploy both services. Update `CORS_ALLOWED_ORIGINS` on the backend service with your frontend's live public URL once generated.
+
+---
+
+## Running Tests
+
+Run the backend test suite:
+
+```bash
+cd backend
+pytest
+```
 
 ---
 
 ## License
+
 [MIT](LICENSE)

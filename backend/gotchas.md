@@ -6,8 +6,8 @@ _Last updated: 2026-07-28_
 - Ensure `GEMINI_API_KEY` is set in `backend/.env`.
 - Health check `/api/health` validates Gemini API connectivity and returns `status: ok` when valid.
 
-## Chroma Vectorstore Persistence
-- Persistence is automatic with `persist_directory` during `Chroma` instantiation.
+## FAISS Vectorstore Persistence
+- Persistence is automatic with `save_local` and `load_local` during FAISS operations.
 
 ## Hybrid Retrieval API
 - `/api/chat` supports `keywords`, `metadata_filter`, `k`.

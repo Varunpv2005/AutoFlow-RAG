@@ -124,21 +124,49 @@ class RAGPipeline:
 
     def retrieve(self, query: str, k: int = 4, keywords: Optional[list] = None, metadata_filter: Optional[dict] = None) -> List[Document]:
         """
-        Hybrid retrieval: combines FAISS vector search, keyword, and metadata filtering.
+        Semantic retrieval with keyword and metadata filtering.
         :param query: user query
         :param k: number of results
         :param keywords: list of keywords to boost/filter
-        :param metadata_filter: dict of metadata filters (e.g. {"file_id": ...})
+        :param metadata_filter: dict of metadata filters (e.g. {"user_id": ..., "file_id": ...})
         """
         if self.vectorstore is None:
             logging.info("FAISS vectorstore is empty. Returning 0 results.")
             return []
 
-        # FAISS search with optional filter
+        # Convert dictionary metadata_filter to a filter callable if dictionary is provided
+        faiss_filter = None
         if metadata_filter:
-            results = self.vectorstore.similarity_search(query, k=k, filter=metadata_filter)
+            # Match metadata keys as string or int to handle serialized types
+            def _filter_fn(doc_meta: dict) -> bool:
+                if not doc_meta:
+                    return False
+                for key, val in metadata_filter.items():
+                    if val is None:
+                        continue
+                    meta_val = doc_meta.get(key)
+                    if meta_val != val and str(meta_val) != str(val):
+                        return False
+                return True
+
+            faiss_filter = _filter_fn
+
+        # Pass fetch_k to ensure FAISS retrieves an adequate candidate pool before post-filtering
+        fetch_k = max(k * 10, 50)
+        if faiss_filter:
+            results_with_score = self.vectorstore.similarity_search_with_score(query, k=k, filter=faiss_filter, fetch_k=fetch_k)
         else:
-            results = self.vectorstore.similarity_search(query, k=k)
+            results_with_score = self.vectorstore.similarity_search_with_score(query, k=k)
+
+        results: List[Document] = []
+        for doc, dist in results_with_score:
+            doc.metadata = doc.metadata or {}
+            # Convert FAISS L2 distance to a 0.0 - 1.0 similarity score: 1 / (1 + distance)
+            score = round(1.0 / (1.0 + float(dist)), 4)
+            doc.metadata["score"] = score
+            doc.metadata["similarity_score"] = score
+            doc.metadata["faiss_distance"] = float(dist)
+            results.append(doc)
 
         # Keyword filter/boost
         if keywords:
@@ -146,7 +174,7 @@ class RAGPipeline:
             unique = {id(doc): doc for doc in keyword_results + results}
             results = list(unique.values())[:k]
 
-        logging.info(f"Hybrid retrieval for query '{query}': {len(results)} docs (FAISS top-k, keywords={keywords}, metadata={metadata_filter})")
+        logging.info(f"Semantic retrieval for query '{query}': {len(results)} docs (FAISS top-k, keywords={keywords}, metadata={metadata_filter})")
         return results
 
     def reindex_all_files(self, db):
@@ -164,7 +192,14 @@ class RAGPipeline:
         count = 0
         for db_file in db_files:
             if os.path.exists(db_file.filepath):
-                self.ingest(db_file.filepath, metadata={"file_id": db_file.id, "filename": db_file.filename})
+                self.ingest(
+                    db_file.filepath,
+                    metadata={
+                        "file_id": db_file.id,
+                        "filename": db_file.filename,
+                        "user_id": db_file.user_id,
+                    }
+                )
                 count += 1
 
         logging.info(f"Re-indexed {count} existing files into FAISS.")

@@ -20,21 +20,21 @@ _Last updated: 2026-07-28_
   - Query params (legacy support): `question: str`, `file_id: int (optional)`
   - Response: `{ "answer": "...", "sources": ["file.pdf"] }`
   - Supports hybrid retrieval: vector + keyword + metadata filtering.
-- `GET /api/health`    (verifies DB, Chroma vectorstore, and Gemini 2.5 Flash API connectivity)
+- `GET /api/health`    (verifies DB, FAISS vectorstore, and Gemini 2.5 Flash configuration)
 - `POST /api/admin/clear_all` (resets all files, chat history, and vector store)
 
 ## Vectorstore Persistence
-- Chroma persistence is automatic with `persist_directory`.
+- FAISS persistence is automatic via `save_local` and `load_local`.
 
 ## LLM & Service Integration
 - Powered by **Google Gemini 2.5 Flash** (`gemini-2.5-flash`) via the official Google GenAI Python SDK (`google-genai`).
-- Embeddings generated via `gemini-embedding-001`.
+- Embeddings generated locally via `sentence-transformers/all-MiniLM-L6-v2`.
 - API Key loaded securely from `backend/.env` under `GEMINI_API_KEY`.
 - Single-point provider configuration managed in `backend/app/config.py`.
 
 ## Required Dependencies
 - `google-genai`
-- `langchain-community`, `langchain-chroma`, `langchain-core`
+- `langchain-community`, `langchain-core`, `faiss-cpu`
 - `pydantic-settings`, `python-dotenv`
 - `unstructured`, `pdfplumber`, `pypdf`
 

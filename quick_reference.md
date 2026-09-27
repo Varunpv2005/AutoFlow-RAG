@@ -16,13 +16,13 @@ This document outlines the **requirements and architecture** for the AutoFlow RA
 - Single-point Configuration: Centralized in `backend/app/config.py`.
 
 ### 2. Vector Store & File Processing
-- Local Vector Database: ChromaDB (stored on local disk at `backend/app/data/chroma_db`).
+- Local Vector Database: FAISS (stored on local disk at `backend/app/data/faiss_index`).
 - RAG Pipeline orchestrates:
     - File parsing (PDF, DOCX, TXT, CSV, XLSX)
     - Adaptive chunking (`MarkdownHeaderTextSplitter` / `RecursiveCharacterTextSplitter`)
     - Embedding via local `HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")`
-    - Vector storage in ChromaDB
-    - Hybrid retrieval (vector, keyword, metadata filter)
+    - Vector storage in FAISS
+    - Semantic retrieval with user-scoped metadata filtering and keyword boosting
     - Context construction & Gemini 2.5 Flash completion
 
 ### 3. Frontend
@@ -39,6 +39,6 @@ This document outlines the **requirements and architecture** for the AutoFlow RA
 | Backend      | FastAPI (Python)             | Async REST API                         |
 | File Storage | Local filesystem             | Storage for uploaded files             |
 | User DB      | SQLite (SQLAlchemy)          | Local DB for file and chat metadata    |
-| Vector Store | ChromaDB                     | Disk-backed vector database            |
+| Vector Store | FAISS                        | Disk-backed vector store               |
 | Embeddings   | `all-MiniLM-L6-v2`           | Local Sentence Transformers            |
 | LLM          | Gemini 2.5 Flash             | Google GenAI LLM (`gemini-2.5-flash`)  |

@@ -28,6 +28,21 @@ class AnalyticsSnapshot:
     def __post_init__(self):
         self._load()
 
+    def reset(self) -> None:
+        self.total_queries = 0
+        self.total_retrieved_chunks = 0
+        self.total_retrieval_latency = 0.0
+        self.total_llm_response_time = 0.0
+        self.total_embedding_time = 0.0
+        self.uploaded_documents = 0
+        self.total_chunks = 0
+        self.average_retrieval_latency = 0.0
+        self.average_llm_response_time = 0.0
+        self.embedding_generation_time = 0.0
+        self._retrieval_latencies.clear()
+        self._llm_response_times.clear()
+        self._embedding_times.clear()
+
     def _ensure_data_dir(self) -> None:
         try:
             DATA_DIR.mkdir(parents=True, exist_ok=True)
