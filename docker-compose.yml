@@ -14,13 +14,13 @@ services:
       - upload_data:/data/files
       - sqlite_data:/app/data
     ports:
-      - "8000:8000"
+      - "8081:8000"
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8000/api/health || exit 1"]
       interval: 15s
       timeout: 5s
       retries: 3
-      start_period: 10s
+      start_period: 30s
     restart: unless-stopped
 
   frontend:
@@ -28,8 +28,11 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     container_name: autoflow-rag-frontend
+    environment:
+      - BACKEND_HOST=backend:8000
+      - PORT=80
     ports:
-      - "3000:80"
+      - "3001:80"
     depends_on:
       backend:
         condition: service_healthy

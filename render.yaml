@@ -7,6 +7,7 @@ services:
     dockerfilePath: ./backend/Dockerfile
     plan: free
     region: oregon
+    healthCheckPath: /api/health
     envVars:
       - key: GEMINI_API_KEY
         sync: false
@@ -19,7 +20,7 @@ services:
       - key: MAX_UPLOAD_SIZE_MB
         value: "25"
       - key: CORS_ALLOWED_ORIGINS
-        value: https://autoflow-rag-frontend.onrender.com,http://localhost:3000
+        value: https://autoflow-rag-frontend.onrender.com
 
   - type: web
     name: autoflow-rag-frontend
@@ -28,3 +29,9 @@ services:
     dockerfilePath: ./frontend/Dockerfile
     plan: free
     region: oregon
+    envVars:
+      - key: BACKEND_HOST
+        fromService:
+          type: web
+          name: autoflow-rag-backend
+          property: hostport
