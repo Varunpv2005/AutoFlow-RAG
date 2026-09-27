@@ -440,3 +440,33 @@
 [2026-09-27T14:20:04.735071] event=request_completed timestamp=2026-09-27T14:20:04.735071 request_id=e2e91353-8147-4261-885a-a9164f701797 path=/api/auth/login api_latency_ms=357.707 status_code=200
 [2026-09-27T14:20:04.944320] event=request_completed timestamp=2026-09-27T14:20:04.944320 request_id=4f970b49-83fb-45f0-9213-fa9a55d8a780 path=/api/analytics api_latency_ms=204.722 status_code=200
 [2026-09-27T14:20:04.956146] event=request_completed timestamp=2026-09-27T14:20:04.956146 request_id=8c376496-7afc-402d-b685-754cfd896482 path=/api/health api_latency_ms=1.583 status_code=200
+[2026-09-27T15:54:10.041102] event=[init_db] Database initialized successfully. timestamp=2026-09-27T15:54:10.041102 request_id=None
+[2026-09-27T15:54:40.138280] event=chat_completed timestamp=2026-09-27T15:54:40.138280 retrieval_latency_ms=0.0 llm_latency_ms=0.0 chunk_count=1 user_id=1 request_id=None
+[2026-09-27T15:54:42.042802] event=[Chat] Gemini service unavailable: Gemini service is temporarily unavailable timestamp=2026-09-27T15:54:42.042802 request_id=3a492891-f393-469a-bd42-7328f360233b
+[2026-09-27T15:54:42.044797] event=request_completed timestamp=2026-09-27T15:54:42.044797 request_id=3a492891-f393-469a-bd42-7328f360233b path=/api/chat api_latency_ms=10.82 status_code=503
+[2026-09-27T15:54:42.065064] event=contextual_event timestamp=2026-09-27T15:54:42.065064 message=boom request_id=req-3
+[2026-09-27T15:54:42.131658] event=http_exception timestamp=2026-09-27T15:54:42.131658 request_id=b04ff313-3a69-4d3d-b422-0945433b6230 status_code=409 message=Username already exists path=/api/auth/signup
+[2026-09-27T15:54:42.133197] event=request_completed timestamp=2026-09-27T15:54:42.133197 request_id=b04ff313-3a69-4d3d-b422-0945433b6230 path=/api/auth/signup api_latency_ms=13.613 status_code=409
+[2026-09-27T15:54:42.600848] event=request_completed timestamp=2026-09-27T15:54:42.600848 request_id=adfbe52c-aaf3-46e1-bf89-4798f53b4f6b path=/api/auth/login api_latency_ms=460.656 status_code=200
+[2026-09-27T15:54:42.834469] event=request_completed timestamp=2026-09-27T15:54:42.834469 request_id=9861d49d-8b37-4c75-9390-4e69188bb6a0 path=/api/analytics api_latency_ms=227.1 status_code=200
+[2026-09-27T15:54:42.846743] event=request_completed timestamp=2026-09-27T15:54:42.846743 request_id=6d5255de-321b-4b70-9c84-d5d38ae41c09 path=/api/health api_latency_ms=2.256 status_code=200
+[2026-09-27T16:34:17.069622] event=[init_db] Database initialized successfully. timestamp=2026-09-27T16:34:17.069622 request_id=None
+[2026-09-27T16:34:38.572262] event=chat_completed timestamp=2026-09-27T16:34:38.572262 retrieval_latency_ms=0.0 llm_latency_ms=0.0 chunk_count=1 user_id=1 request_id=None
+[2026-09-27T16:34:40.370058] event=[Chat] Gemini service unavailable: Gemini service is temporarily unavailable timestamp=2026-09-27T16:34:40.370058 request_id=ddf73fd6-210f-4e36-a453-f88865c61165
+[2026-09-27T16:34:40.371058] event=request_completed timestamp=2026-09-27T16:34:40.371058 request_id=ddf73fd6-210f-4e36-a453-f88865c61165 path=/api/chat api_latency_ms=6.044 status_code=503
+[2026-09-27T16:34:40.385187] event=contextual_event timestamp=2026-09-27T16:34:40.385187 message=boom request_id=req-3
+[2026-09-27T16:34:40.448344] event=http_exception timestamp=2026-09-27T16:34:40.448344 request_id=e8ba17c8-937e-4d78-84d6-aa5de4684e6c status_code=409 message=Username already exists path=/api/auth/signup
+[2026-09-27T16:34:40.448344] event=request_completed timestamp=2026-09-27T16:34:40.448344 request_id=e8ba17c8-937e-4d78-84d6-aa5de4684e6c path=/api/auth/signup api_latency_ms=8.401 status_code=409
+[2026-09-27T16:34:40.779846] event=request_completed timestamp=2026-09-27T16:34:40.779846 request_id=cf7ecebd-30a6-47ae-aa95-fcd8c4f1ab81 path=/api/auth/login api_latency_ms=325.292 status_code=200
+[2026-09-27T16:34:40.979015] event=request_completed timestamp=2026-09-27T16:34:40.980006 request_id=aee5644a-fd06-41dc-a8b8-0e8ffa89b988 path=/api/analytics api_latency_ms=193.887 status_code=200
+[2026-09-27T16:34:40.993114] event=request_completed timestamp=2026-09-27T16:34:40.993114 request_id=ccf24482-ba6a-49d2-a127-4b94642c3474 path=/api/health api_latency_ms=2.173 status_code=200
+[2026-09-27T17:24:16.357736] event=[init_db] Database initialized successfully. timestamp=2026-09-27T17:24:16.357736 request_id=None
+[2026-09-27T17:24:45.001564] event=chat_completed timestamp=2026-09-27T17:24:45.002199 retrieval_latency_ms=0.0 llm_latency_ms=0.0 chunk_count=1 user_id=1 request_id=None
+[2026-09-27T17:24:47.367553] event=[Chat] Gemini service unavailable: Gemini service is temporarily unavailable timestamp=2026-09-27T17:24:47.367553 request_id=f9afc425-f88c-4e99-ba75-71431765d432
+[2026-09-27T17:24:47.370072] event=request_completed timestamp=2026-09-27T17:24:47.370072 request_id=f9afc425-f88c-4e99-ba75-71431765d432 path=/api/chat api_latency_ms=11.667 status_code=503
+[2026-09-27T17:24:47.395087] event=contextual_event timestamp=2026-09-27T17:24:47.395087 message=boom request_id=req-3
+[2026-09-27T17:24:47.500994] event=http_exception timestamp=2026-09-27T17:24:47.500994 request_id=b4677b84-621b-40da-a3a4-5c17791eb937 status_code=409 message=Username already exists path=/api/auth/signup
+[2026-09-27T17:24:47.502027] event=request_completed timestamp=2026-09-27T17:24:47.502027 request_id=b4677b84-621b-40da-a3a4-5c17791eb937 path=/api/auth/signup api_latency_ms=13.307 status_code=409
+[2026-09-27T17:24:47.833129] event=request_completed timestamp=2026-09-27T17:24:47.833129 request_id=f97c0d3d-1aa7-47d3-8c11-e046a328eaf6 path=/api/auth/login api_latency_ms=322.449 status_code=200
+[2026-09-27T17:24:48.497448] event=request_completed timestamp=2026-09-27T17:24:48.497448 request_id=7fe8be2c-158e-4b9e-b32a-5504e163d1d6 path=/api/analytics api_latency_ms=656.748 status_code=200
+[2026-09-27T17:24:48.518264] event=request_completed timestamp=2026-09-27T17:24:48.518264 request_id=0a548cda-eb94-494c-9b5c-06b016e8d19a path=/api/health api_latency_ms=5.281 status_code=200
