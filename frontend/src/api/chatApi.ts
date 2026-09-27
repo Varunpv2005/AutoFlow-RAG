@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { apiBase } from './client';
 import { getToken } from './authApi';
 
 const authHeaders = () => {
@@ -25,7 +26,7 @@ export const sendChat = async (
     ('question' in optsOrFileId || 'fileId' in optsOrFileId)
   ) {
     const response = await axios.post(
-      '/api/chat',
+      `${apiBase}/api/chat`,
       {
         question: optsOrFileId.question,
         file_id: optsOrFileId.fileId,
@@ -40,7 +41,7 @@ export const sendChat = async (
   }
   try {
     const response = await axios.post(
-      '/api/chat',
+      `${apiBase}/api/chat`,
       { question, file_id: optsOrFileId },
       { headers: authHeaders() }
     );
@@ -52,7 +53,7 @@ export const sendChat = async (
 
 export const fetchChatHistory = async () => {
   try {
-    const response = await axios.get('/api/chat/history', {
+    const response = await axios.get(`${apiBase}/api/chat/history`, {
       headers: authHeaders()
     });
     return response.data;
@@ -65,7 +66,7 @@ export const fetchChatHistory = async () => {
 export const submitFeedback = async (chatId: number, feedback: 'up' | 'down') => {
   try {
     await axios.post(
-      '/api/chat/feedback',
+      `${apiBase}/api/chat/feedback`,
       { chat_id: chatId, feedback },
       { headers: authHeaders() }
     );
@@ -76,7 +77,7 @@ export const submitFeedback = async (chatId: number, feedback: 'up' | 'down') =>
 
 /** Fetch recent activity */
 export const fetchActivity = async () => {
-  const response = await axios.get('/api/activity', { headers: authHeaders() });
+  const response = await axios.get(`${apiBase}/api/activity`, { headers: authHeaders() });
   return response.data;
 };
 
@@ -99,7 +100,7 @@ export const streamChat = (
     params.append('conversation_history', JSON.stringify(conversationHistory));
   }
 
-  const url = `/api/chat/stream?${params.toString()}`;
+  const url = `${apiBase}/api/chat/stream?${params.toString()}`;
   const es = new EventSource(
     url + (token ? `&_auth=${encodeURIComponent(token)}` : '')
   );

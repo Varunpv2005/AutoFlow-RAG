@@ -72,7 +72,7 @@ const FilesSidebar = ({ collapsed = false }: FilesSidebarProps) => {
         <Box p={2.5} borderRadius="xl" bg="blue.50" color="blue.600" mb={4}>
           <Icon as={FaFolderOpen} boxSize={5} />
         </Box>
-        <Text fontSize="10px" fontWeight="bold" letterSpacing="wider" color="gray.400" textTransform="uppercase" writingMode="vertical-rl" transform="rotate(180deg)">
+        <Text fontSize="10px" fontWeight="bold" letterSpacing="wider" color="gray.400" textTransform="uppercase" style={{ writingMode: 'vertical-rl' }} transform="rotate(180deg)">
           Documents
         </Text>
       </Box>

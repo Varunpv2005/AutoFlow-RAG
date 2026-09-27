@@ -92,11 +92,11 @@ export const useChatStore = create<ChatState>((set, get) => ({
       messages: [...state.messages, { sender: 'ai', text: '', streaming: true }]
     }));
 
-    const conversationHistory = get().messages
+    const conversationHistory: Array<{ role: 'user' | 'assistant'; content: string }> = get().messages
       .slice(-8)
       .filter((message) => message.sender === 'user' || message.sender === 'ai')
       .map((message) => ({
-        role: message.sender === 'user' ? 'user' : 'assistant',
+        role: message.sender === 'user' ? 'user' : ('assistant' as const),
         content: message.text,
       }));
 

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { apiBase } from './client';
 
 export const getToken = () => localStorage.getItem('auth_token');
 
@@ -13,7 +14,7 @@ export const getUsername = () => localStorage.getItem('auth_username');
 
 export const signup = async (username: string, password: string) => {
   const normalizedUsername = username.trim();
-  const response = await axios.post('/api/auth/signup', { username: normalizedUsername, password });
+  const response = await axios.post(`${apiBase}/api/auth/signup`, { username: normalizedUsername, password });
   setToken(response.data.access_token);
   localStorage.setItem('auth_username', normalizedUsername);
   return response.data;
@@ -21,7 +22,7 @@ export const signup = async (username: string, password: string) => {
 
 export const login = async (username: string, password: string) => {
   const normalizedUsername = username.trim();
-  const response = await axios.post('/api/auth/login', { username: normalizedUsername, password });
+  const response = await axios.post(`${apiBase}/api/auth/login`, { username: normalizedUsername, password });
   setToken(response.data.access_token);
   localStorage.setItem('auth_username', normalizedUsername);
   return response.data;

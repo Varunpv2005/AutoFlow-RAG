@@ -8,6 +8,7 @@ import { FaFilePdf, FaFileWord, FaFileExcel, FaFileAlt, FaTrash, FaBrain, FaRegQ
 import { FileMeta } from 'state/filesStore';
 import { useChatStore } from 'state/chatStore';
 import { previewFile } from 'api/filesApi';
+import { apiBase } from 'api/client';
 
 const getFileIcon = (filename?: string) => {
   if (!filename) return { icon: FaFileAlt, color: 'gray.400' };
@@ -235,7 +236,7 @@ const FilePill = ({ file, onDelete, deleting }: FilePillProps) => {
               </Box>
             ) : preview?.type === 'pdf' ? (
               <Box borderWidth="1px" borderColor="gray.200" borderRadius="md" overflow="hidden">
-                <iframe src={`/api/files/${file.id}/preview?download=1`} title={file.filename} style={{ width: '100%', height: '60vh', border: 'none' }} />
+                <iframe src={`${apiBase}/api/files/${file.id}/preview?download=1`} title={file.filename} style={{ width: '100%', height: '60vh', border: 'none' }} />
               </Box>
             ) : (
               <Text color="gray.500">Preview is not available for this file type.</Text>

@@ -20,9 +20,11 @@ class ObservabilityTests(unittest.TestCase):
         self.assertEqual(payload["request_id"], "req-2")
 
     def test_safe_log_gotcha_uses_request_context(self):
+        from unittest.mock import patch, mock_open
         set_request_id("req-3")
         try:
-            payload = safe_log_gotcha("contextual_event", message="boom")
+            with patch("builtins.open", mock_open()):
+                payload = safe_log_gotcha("contextual_event", message="boom")
         finally:
             clear_request_id()
         self.assertEqual(payload["request_id"], "req-3")

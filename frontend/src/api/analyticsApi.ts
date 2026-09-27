@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { apiBase } from './client';
 import { getToken } from './authApi';
 
 const authHeaders = () => {
@@ -8,7 +9,7 @@ const authHeaders = () => {
 
 export const fetchAnalytics = async () => {
   try {
-    const response = await axios.get('/api/analytics', {
+    const response = await axios.get(`${apiBase}/api/analytics`, {
       headers: authHeaders()
     });
     return response.data;

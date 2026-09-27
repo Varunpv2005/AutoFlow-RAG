@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Button, Alert, AlertIcon, useToast, Heading, Text } from '@chakra-ui/react';
 import axios from 'axios';
+import { apiBase } from '../../api/client';
 
 const ADMIN_TOKEN = import.meta.env.VITE_ADMIN_TOKEN || 'supersecret';
 
@@ -16,7 +17,7 @@ const AdminPanel = () => {
     setResult(null);
     setError(null);
     try {
-      const resp = await axios.post('/api/admin/clear_all', {}, {
+      const resp = await axios.post(`${apiBase}/api/admin/clear_all`, {}, {
         headers: { 'admin-token': ADMIN_TOKEN }
       });
       setResult(`Deleted ${resp.data.files_deleted} files and ${resp.data.chats_deleted} chat messages.`);
