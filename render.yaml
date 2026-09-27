@@ -30,8 +30,5 @@ services:
     plan: free
     region: oregon
     envVars:
-      - key: BACKEND_HOST
-        fromService:
-          type: web
-          name: autoflow-rag-backend
-          property: hostport
+      - key: BACKEND_URL
+        value: https://autoflow-rag-backend.onrender.com

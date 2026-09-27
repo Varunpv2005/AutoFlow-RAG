@@ -9,6 +9,7 @@ services:
     environment:
       - FAISS_PATH=/app/data/faiss_index
       - UPLOAD_DIR=/data/files
+      - PORT=8000
     volumes:
       - faiss_data:/app/data/faiss_index
       - upload_data:/data/files
@@ -19,8 +20,8 @@ services:
       test: ["CMD-SHELL", "curl -f http://localhost:8000/api/health || exit 1"]
       interval: 15s
       timeout: 5s
-      retries: 3
-      start_period: 30s
+      retries: 5
+      start_period: 60s
     restart: unless-stopped
 
   frontend:
@@ -29,7 +30,7 @@ services:
       dockerfile: Dockerfile
     container_name: autoflow-rag-frontend
     environment:
-      - BACKEND_HOST=backend:8000
+      - BACKEND_URL=http://backend:8000
       - PORT=80
     ports:
       - "3001:80"

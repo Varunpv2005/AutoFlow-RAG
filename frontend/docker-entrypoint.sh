@@ -3,14 +3,28 @@ set -e
 
 # Default values if environment variables are not set
 export PORT="${PORT:-80}"
-export BACKEND_HOST="${BACKEND_HOST:-backend:8000}"
+export BACKEND_URL="${BACKEND_URL:-http://backend:8000}"
 
-echo "Configuring Nginx with PORT=${PORT} and BACKEND_HOST=${BACKEND_HOST}..."
+echo "=========================================="
+echo "Frontend Nginx Runtime Environment Config:"
+echo "PORT=${PORT}"
+echo "BACKEND_URL=${BACKEND_URL}"
+echo "=========================================="
 
-# Substitute ${PORT} and ${BACKEND_HOST} into nginx.conf
-envsubst '${PORT} ${BACKEND_HOST}' < /etc/nginx/templates/default.conf.template > /etc/nginx/conf.d/default.conf
+# Extract backend host (domain name without scheme or port) for Nginx Host header
+# e.g., https://autoflow-rag-backend.onrender.com -> autoflow-rag-backend.onrender.com
+# e.g., http://backend:8000 -> backend
+export backend_host=$(echo "${BACKEND_URL}" | sed -e 's|^[^/]*//||' -e 's|/.*$||' -e 's|:.*$||')
 
-# Validate Nginx configuration syntax before starting
+echo "Extracted backend host for Host header: ${backend_host}"
+
+# Substitute variables into default.conf
+# Note: $backend_host is substituted, so proxy_set_header Host receives the clean domain name
+envsubst '${PORT} ${BACKEND_URL} ${backend_host}' < /etc/nginx/templates/default.conf.template > /etc/nginx/conf.d/default.conf
+
+echo "Generated Nginx default.conf:"
+cat /etc/nginx/conf.d/default.conf
+
 echo "Validating Nginx configuration..."
 nginx -t
 
