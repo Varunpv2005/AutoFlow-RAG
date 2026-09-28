@@ -11,6 +11,9 @@ echo "PORT=${PORT}"
 echo "BACKEND_URL=${BACKEND_URL}"
 echo "=========================================="
 
+# Remove any trailing slash from BACKEND_URL to ensure Nginx proxy_pass preserves request paths (/api/...)
+export BACKEND_URL=$(echo "${BACKEND_URL}" | sed 's|/*$||')
+
 # Extract backend host (domain name without scheme or port) for Nginx Host header
 # e.g., https://autoflow-rag-backend.onrender.com -> autoflow-rag-backend.onrender.com
 # e.g., http://backend:8000 -> backend

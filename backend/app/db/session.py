@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import Session
-from .models import Base, File as DBFile, ChatHistory
+from .models import Base, File as DBFile, ChatHistory, User
 import os
 
 DB_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../data/chatrag.db"))
@@ -62,6 +62,7 @@ def _ensure_sqlite_columns_for_model(model):
 
 def _ensure_sqlite_schema():
     Base.metadata.create_all(bind=engine)
+    _ensure_sqlite_columns_for_model(User)
     _ensure_sqlite_columns_for_model(DBFile)
     _ensure_sqlite_columns_for_model(ChatHistory)
 

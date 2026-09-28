@@ -24,7 +24,16 @@ export default function SignupPage({ onAuth, onGoLogin }: Props) {
       await signup(username, password);
       onAuth();
     } catch (err: any) {
-      setError(err?.response?.data?.detail || 'Signup failed');
+      const detail = err?.response?.data?.detail;
+      if (typeof detail === 'string') {
+        setError(detail);
+      } else if (Array.isArray(detail) && detail.length > 0) {
+        setError(detail.map((item: any) => item?.msg || JSON.stringify(item)).join(', '));
+      } else if (detail && typeof detail === 'object' && detail.msg) {
+        setError(detail.msg);
+      } else {
+        setError('Signup failed');
+      }
     } finally {
       setLoading(false);
     }

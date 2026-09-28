@@ -56,7 +56,7 @@ async def request_context_middleware(request: Request, call_next):
     started_at = datetime.now()
     response = None
     try:
-        if request.url.path in PUBLIC_ENDPOINTS:
+        if request.method != "OPTIONS" and request.url.path in PUBLIC_ENDPOINTS:
             client_key = request.headers.get("x-forwarded-for") or request.client.host if request.client else "unknown"
             if not public_rate_limiter.allow_request(f"public:{request.url.path}:{client_key}"):
                 response = JSONResponse(status_code=429, content={"detail": "Too many requests. Please try again later."})
