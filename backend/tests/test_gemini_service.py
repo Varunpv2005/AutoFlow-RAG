@@ -9,13 +9,13 @@ from app.auth import get_current_user
 
 
 def test_generate_retries_and_falls_back(monkeypatch):
-    service = GeminiService(api_key="test-key", model_name="gemini-2.5-flash")
-    service.fallback_models = ["gemini-2.5-flash-lite"]
+    service = GeminiService(api_key="test-key", model_name="gemini-3.8-flash")
+    service.fallback_models = ["gemini-3.8-flash-lite"]
     calls = []
 
     def fake_generate_content(model, contents):
         calls.append(model)
-        if model == "gemini-2.5-flash":
+        if model == "gemini-3.8-flash":
             raise Exception("503 UNAVAILABLE")
         return SimpleNamespace(text="fallback answer")
 
@@ -24,11 +24,11 @@ def test_generate_retries_and_falls_back(monkeypatch):
 
     assert service.generate("prompt") == "fallback answer"
     assert calls == [
-        "gemini-2.5-flash",
-        "gemini-2.5-flash",
-        "gemini-2.5-flash",
-        "gemini-2.5-flash",
-        "gemini-2.5-flash-lite",
+        "gemini-3.8-flash",
+        "gemini-3.8-flash",
+        "gemini-3.8-flash",
+        "gemini-3.8-flash",
+        "gemini-3.8-flash-lite",
     ]
 
 

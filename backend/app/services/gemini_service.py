@@ -35,7 +35,7 @@ class GeminiService:
         )
 
     def _get_fallback_models(self) -> List[str]:
-        raw_value = os.getenv("GEMINI_FALLBACK_MODELS", "gemini-2.5-flash-lite,gemini-2.0-flash")
+        raw_value = os.getenv("GEMINI_FALLBACK_MODELS", "gemini-3.8-flash-lite,gemini-3.0-flash")
         models = []
         for candidate in raw_value.split(","):
             model = candidate.strip()

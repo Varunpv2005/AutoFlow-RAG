@@ -39,7 +39,7 @@ class Settings(BaseSettings):
     
     # Gemini API Configuration for LLM
     GEMINI_API_KEY: str = ""
-    GEMINI_MODEL: str = "gemini-2.5-flash"
+    GEMINI_MODEL: str = "gemini-3.8-flash"
 
     # Embedding Configuration (Local Sentence Transformers)
     EMBEDDING_MODEL: str = "sentence-transformers/all-MiniLM-L6-v2"

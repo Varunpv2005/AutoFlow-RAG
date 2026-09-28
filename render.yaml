@@ -16,7 +16,7 @@ services:
       - key: CHAT_RAG_ADMIN_TOKEN
         sync: false
       - key: GEMINI_MODEL
-        value: gemini-2.5-flash
+        value: gemini-3.8-flash
       - key: MAX_UPLOAD_SIZE_MB
         value: "25"
       - key: ENVIRONMENT

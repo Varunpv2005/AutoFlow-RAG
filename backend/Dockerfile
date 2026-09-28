@@ -17,11 +17,17 @@ RUN pip install --no-cache-dir --timeout=300 --retries=5 \
 # Install remaining application dependencies
 RUN pip install --no-cache-dir --no-deps --timeout=300 --retries=5 -r requirements.txt
 
+# Set HuggingFace cache directory for root and non-root appuser
+ENV HF_HOME=/app/.cache/huggingface
+
+# Pre-download HuggingFace embedding model weights during Docker build
+RUN python -c "from langchain_huggingface import HuggingFaceEmbeddings; HuggingFaceEmbeddings(model_name='sentence-transformers/all-MiniLM-L6-v2')"
+
 COPY . .
 
 # Create non-root user and directories with appropriate ownership
 RUN useradd -m -u 1000 appuser && \
-    mkdir -p /app/data/faiss_index /data/files && \
+    mkdir -p /app/data/faiss_index /data/files /app/.cache && \
     chown -R appuser:appuser /app /data
 
 USER appuser
