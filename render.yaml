@@ -12,9 +12,9 @@ services:
       - key: GEMINI_API_KEY
         sync: false
       - key: JWT_SECRET_KEY
-        generateValue: true
+        sync: false
       - key: CHAT_RAG_ADMIN_TOKEN
-        generateValue: true
+        sync: false
       - key: GEMINI_MODEL
         value: gemini-2.5-flash
       - key: MAX_UPLOAD_SIZE_MB

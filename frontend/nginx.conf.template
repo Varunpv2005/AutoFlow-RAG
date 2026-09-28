@@ -8,6 +8,9 @@ server {
     location /api/ {
         proxy_pass ${BACKEND_URL};
 
+        # Allow file uploads up to 30 MB (backend enforces 25 MB; nginx default is 1 MB)
+        client_max_body_size 30m;
+
         proxy_ssl_server_name on;
         proxy_set_header Host $backend_host;
         proxy_set_header X-Real-IP $remote_addr;

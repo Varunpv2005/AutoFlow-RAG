@@ -12,7 +12,7 @@ export const uploadFile = async (file: File) => {
     const formData = new FormData();
     formData.append('file', file);
     const response = await axios.post(`${apiBase}/api/upload`, formData, {
-      headers: { 'Content-Type': 'multipart/form-data', ...authHeaders() },
+      headers: { ...authHeaders() },
     });
     return response.data;
   } catch (error: any) {
