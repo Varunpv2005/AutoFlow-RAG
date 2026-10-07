@@ -77,7 +77,7 @@ The system can also refuse questions when relevant information cannot be found i
 
 ### Workspace Analytics
 
-![Workspace Analytics](docs/screenshots/analytics.png)
+
 
 The analytics dashboard provides visibility into:
 
