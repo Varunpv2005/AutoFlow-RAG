@@ -1,211 +1,410 @@
-🚀 AutoFlow-RAG — Autonomous AI Task Execution Engine
-AI-Powered Document Intelligence & Retrieval-Augmented Generation Platform
-AutoFlow-RAG is a full-stack RAG-based document intelligence platform that allows users to upload documents and ask natural-language questions over their content.
-The system automates the complete workflow:
-Document Upload → Parsing → Chunking → Embeddings → FAISS Retrieval → Context Filtering → Gemini Generation → Streaming Response
-It combines React, FastAPI, FAISS, Sentence Transformers, Google Gemini 2.5 Flash, JWT authentication, SQLite, and Docker into a complete end-to-end AI application.
+# AutoFlow-RAG — Autonomous AI Task Execution Engine
 
-✨ Key Features
-- 📄 Multi-format document processing — PDF, DOCX, TXT, CSV, and XLSX
-- 🧩 Adaptive document chunking with source metadata
-- 🔎 Semantic search using Sentence Transformers
-- ⚡ FAISS vector retrieval with persistent indexing
-- 🔐 JWT authentication with bcrypt password hashing
-- 👤 User-scoped retrieval to isolate documents between users
-- 📊 Retrieval similarity scores for transparent search results
-- 🤖 Grounded Gemini 2.5 Flash responses
-- 💬 Persistent conversational history
-- ⚡ Real-time response streaming using Server-Sent Events (SSE)
-- 📈 Workspace analytics and operational telemetry
-- 🐳 Docker & Docker Compose support
-- ☁️ Cloud deployment configuration
+### AI-Powered Document Intelligence and Retrieval-Augmented Generation Platform
 
-🏗️ Architecture
-                         ┌─────────────────────┐
-                         │       User          │
-                         └──────────┬──────────┘
-                                    │
-                                    ▼
-                    ┌──────────────────────────────┐
-                    │ React + TypeScript + Vite    │
-                    │ Chakra UI + Zustand          │
-                    └──────────────┬───────────────┘
-                                   │
-                           HTTP / SSE + JWT
-                                   │
-                                   ▼
-                    ┌──────────────────────────────┐
-                    │       FastAPI Backend        │
-                    │                              │
-                    │  Authentication & Security   │
-                    │  Document Processing         │
-                    │  Retrieval & Chat            │
-                    │  Analytics                   │
-                    └──────────────┬───────────────┘
-                                   │
-                    ┌──────────────┼──────────────┐
-                    │              │              │
-                    ▼              ▼              ▼
-             ┌────────────┐ ┌────────────┐ ┌──────────────┐
-             │  Document  │ │ Embeddings │ │   SQLite     │
-             │  Chunking  │ │  MiniLM    │ │   Metadata   │
-             └─────┬──────┘ └─────┬──────┘ └──────────────┘
-                   │               │
-                   └───────┬───────┘
-                           ▼
-                    ┌───────────────┐
-                    │ FAISS Index   │
-                    │ Vector Search │
-                    └───────┬───────┘
-                            │
-                     Top-K Retrieval
-                            │
-                            ▼
-                    ┌───────────────┐
-                    │ User-Scoped   │
-                    │ Filtering     │
-                    └───────┬───────┘
-                            │
-                            ▼
-                    ┌───────────────┐
-                    │ Gemini 2.5    │
-                    │ Flash         │
-                    └───────┬───────┘
-                            │
-                       SSE Streaming
-                            │
-                            ▼
-                         Response
+AutoFlow-RAG is a full-stack **Retrieval-Augmented Generation (RAG)** platform that allows users to upload documents, retrieve relevant information using semantic search, and interact with their documents through grounded AI conversations.
 
-🔄 How It Works
-1. Document Ingestion
-Users upload supported documents:
-PDF • DOCX • TXT • CSV • XLSX
-The backend validates the file and extracts its content and metadata.
-2. Chunking
-Documents are divided into smaller chunks while preserving useful source information such as:
+The system automates the complete document-to-answer pipeline:
+
+**Upload → Parse → Chunk → Embed → Index → Retrieve → Filter → Generate → Stream**
+
+It combines **React, FastAPI, FAISS, Sentence Transformers, Google Gemini 2.5 Flash, JWT authentication, SQLite, and Docker** into an end-to-end document intelligence application.
+
+---
+
+## 🚀 Product Overview
+
+AutoFlow-RAG is designed around a simple idea:
+
+> **Give the AI access to the user's documents, retrieve the most relevant evidence, and generate answers grounded in that evidence.**
+
+The application provides:
+
+- Document upload and indexing
+- Semantic document retrieval
+- Source-backed AI answers
+- Retrieval similarity scores
+- Page and chunk references
+- User-scoped document isolation
+- Persistent conversations
+- Real-time AI response streaming
+- Workspace analytics
+- Infrastructure health monitoring
+
+---
+
+## 📸 Application
+
+### Document Workspace
+
+![AutoFlow-RAG Workspace](docs/screenshots/workspace.png)
+
+The workspace provides a centralized interface for:
+
+- Uploading documents
+- Monitoring indexing status
+- Viewing document metadata
+- Starting conversations
+- Reviewing source-backed answers
+
+---
+
+### Grounded Answers & Sources
+
+![Grounded Answer](docs/screenshots/grounded-answer.png)
+
+Each response can display its supporting source information, including:
+
+- Source document
+- Page number
+- Retrieved chunk
+- Similarity score
+- Source relevance
+
+This makes the retrieval process more transparent and easier to verify.
+
+---
+
+### Conversational Document Querying
+
+![Document Conversation](docs/screenshots/conversation.png)
+
+Users can ask natural-language questions and continue the conversation using previously retrieved document context.
+
+The system can also refuse questions when relevant information cannot be found in the uploaded documents rather than blindly generating an answer.
+
+---
+
+### Workspace Analytics
+
+![Workspace Analytics](docs/screenshots/analytics.png)
+
+The analytics dashboard provides visibility into:
+
+- Document allocation
+- Conversation usage
+- Total chunks
+- Global documents
+- Active users
+- Index health
+- Retrieval metrics
+- Infrastructure status
+- Gemini service status
+- FAISS status
+- Database status
+
+---
+
+# ✨ Key Features
+
+### 📄 Multi-Format Document Processing
+
+Supports:
+
+- PDF
+- DOCX
+- TXT
+- CSV
+- XLSX
+
+Documents are parsed, processed, chunked, embedded, and indexed automatically.
+
+### 🧩 Adaptive Chunking
+
+Documents are divided into retrieval-friendly chunks while maintaining metadata such as:
+
+```text
 user_id
 document_id
 filename
 page_number
 chunk_id
-3. Embedding Generation
-Each chunk is converted into a semantic vector using:
-sentence-transformers/all-MiniLM-L6-v2
-The embeddings are generated locally.
-4. Vector Indexing
-The embeddings are stored in a persistent FAISS index for fast similarity search.
-5. Query Processing
-When a user asks a question:
-Question
-   ↓
-Query Embedding
-   ↓
-FAISS Similarity Search
-   ↓
-Top-K Chunks
-   ↓
-User Authorization Filter
-   ↓
-Relevant Context
-6. Grounded Generation
-The retrieved context is passed to Gemini 2.5 Flash along with the user's question.
-The generation prompt instructs the model to answer using the provided context and avoid unsupported information.
-7. Streaming
-The response is delivered progressively through:
-/api/chat/stream
-using Server-Sent Events (SSE).
+```
 
-🔐 Security & Data Isolation
-Security is implemented at multiple layers.
-Authentication
-- JWT-based authentication
-- Bearer token authorization
-- bcrypt password hashing
-User Isolation
-Each vector chunk contains the corresponding user_id.
-During retrieval:
+### 🔎 Semantic Retrieval
+
+User questions are converted into embeddings and searched against the FAISS vector index to identify the most relevant document chunks.
+
+### ⚡ Persistent FAISS Index
+
+Embeddings are stored in a disk-persisted FAISS index so the vector store can survive backend restarts.
+
+### 🔐 User-Scoped Retrieval
+
+Retrieved chunks are associated with the authenticated user's identity.
+
+```text
 Authenticated User
         ↓
-FAISS Candidates
+Vector Search
         ↓
-user_id Filtering
+Candidate Chunks
         ↓
-Authorized Chunks Only
-This prevents documents belonging to one user from being used in another user's retrieval context.
-Additional Controls
-- Configurable CORS
-- Upload size validation
-- Protected administrative endpoints
-- Environment-based secrets
-- No hardcoded API credentials
+User ID Filtering
+        ↓
+Authorized Context
+```
 
-📊 Retrieval Transparency
-AutoFlow-RAG exposes retrieval information instead of treating vector search as a black box.
-FAISS distance is converted into a similarity score:
-similarity = 1 / (1 + distance)
-Retrieved results can therefore provide information such as:
+This prevents cross-user document retrieval.
+
+### 📊 Retrieval Transparency
+
+Retrieved sources expose information such as:
+
+```text
 Document
 Page
 Chunk
 Similarity Score
-This helps understand why particular content was selected for generation.
+```
 
-🧠 RAG Pipeline
-                 OFFLINE / INGESTION
-                 ───────────────────
+FAISS distance is converted into a normalized similarity representation:
 
-Document
-   ↓
-Parse
-   ↓
-Chunk
-   ↓
-Generate Embeddings
-   ↓
-Store in FAISS
+```text
+similarity = 1 / (1 + distance)
+```
 
+### 🤖 Grounded Gemini Responses
 
-                 ONLINE / QUERY
-                 ──────────────
+Relevant document context is supplied to **Gemini 2.5 Flash** to generate answers based on retrieved evidence.
 
-User Question
-   ↓
-Generate Query Embedding
-   ↓
-FAISS Similarity Search
-   ↓
-Retrieve Top-K Candidates
-   ↓
-Apply User Scope
-   ↓
-Build Context
-   ↓
-Gemini 2.5 Flash
-   ↓
-SSE Response
+The application is designed to avoid answering questions when the required information cannot be supported by the indexed documents.
 
-🛠️ Technology Stack
-Layer	Technology
-Frontend	React, TypeScript, Vite
-UI	Chakra UI
-State Management	Zustand
-Backend	FastAPI, Python 3.11
-API Server	Uvicorn
-Validation	Pydantic
-ORM	SQLAlchemy
-Authentication	JWT + bcrypt
-Vector Search	FAISS
-Embeddings	Sentence Transformers
-Embedding Model	all-MiniLM-L6-v2
-LLM	Google Gemini 2.5 Flash
-LLM SDK	Google GenAI
-Database	SQLite
-Testing	Pytest
-Containerization	Docker
-Orchestration	Docker Compose
-Reverse Proxy	Nginx
-📁 Project Structure
+### 💬 Persistent Conversations
+
+Chat history is maintained so users can continue conversations and ask follow-up questions.
+
+### ⚡ Real-Time Streaming
+
+AI responses can be delivered incrementally using **Server-Sent Events (SSE)**.
+
+```text
+/api/chat/stream
+```
+
+### 📈 Workspace Analytics
+
+The application provides workspace-level analytics and infrastructure visibility.
+
+### 🐳 Containerized Deployment
+
+The complete application can be run using Docker and Docker Compose.
+
+---
+
+# 🏗️ Architecture
+
+```mermaid
+flowchart TD
+
+    USER[User]
+
+    FE[React + TypeScript + Vite<br/>Chakra UI + Zustand]
+
+    API[FastAPI Backend]
+
+    AUTH[Authentication & Security<br/>JWT + bcrypt]
+
+    DOC[Document Processing]
+
+    CHUNK[Adaptive Chunking]
+
+    EMB[Sentence Transformers<br/>all-MiniLM-L6-v2]
+
+    FAISS[FAISS Vector Index]
+
+    RET[Retrieval Engine]
+
+    FILTER[User-Scoped Filtering]
+
+    GEM[Gemini 2.5 Flash]
+
+    SSE[Server-Sent Events]
+
+    DB[(SQLite<br/>Metadata + Chat History)]
+
+    ANALYTICS[Analytics & Telemetry]
+
+    USER --> FE
+
+    FE -->|HTTP / SSE + JWT| API
+
+    API --> AUTH
+    API --> DOC
+    API --> RET
+    API --> ANALYTICS
+
+    DOC --> CHUNK
+    CHUNK --> EMB
+    EMB --> FAISS
+
+    RET --> FAISS
+    FAISS --> FILTER
+    FILTER --> GEM
+
+    GEM --> SSE
+    SSE --> FE
+
+    AUTH --> DB
+    DOC --> DB
+    ANALYTICS --> DB
+```
+
+---
+
+# 🔄 RAG Pipeline
+
+## Document Ingestion
+
+```mermaid
+flowchart LR
+
+    A[Upload Document]
+    B[Validate File]
+    C[Extract Content]
+    D[Chunk Document]
+    E[Generate Embeddings]
+    F[Store in FAISS]
+
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+```
+
+## Query Processing
+
+```mermaid
+flowchart LR
+
+    A[User Question]
+    B[Query Embedding]
+    C[FAISS Similarity Search]
+    D[Top-K Candidates]
+    E[User-Scoped Filtering]
+    F[Relevant Context]
+    G[Gemini 2.5 Flash]
+    H[SSE Response]
+
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+    F --> G
+    G --> H
+```
+
+---
+
+# 🧠 How It Works
+
+### 1. Upload
+
+The user uploads a supported document.
+
+### 2. Parse
+
+The backend extracts text and document metadata.
+
+### 3. Chunk
+
+The extracted content is divided into smaller retrieval-friendly chunks.
+
+### 4. Embed
+
+Each chunk is converted into a vector using:
+
+```text
+sentence-transformers/all-MiniLM-L6-v2
+```
+
+### 5. Index
+
+The vectors are stored in FAISS.
+
+### 6. Query
+
+The user's question is converted into an embedding.
+
+### 7. Retrieve
+
+FAISS performs similarity search and returns the most relevant chunks.
+
+### 8. Filter
+
+Retrieved candidates are filtered using the authenticated user's `user_id`.
+
+### 9. Generate
+
+The selected context is provided to Gemini 2.5 Flash.
+
+### 10. Stream
+
+The generated response is streamed back to the frontend using SSE.
+
+---
+
+# 🔐 Security
+
+AutoFlow-RAG implements application-level security through:
+
+### Authentication
+
+- JWT-based authentication
+- Bearer token authorization
+- bcrypt password hashing
+
+### Authorization
+
+User identity is used to scope document and retrieval operations.
+
+### Data Isolation
+
+Every indexed chunk contains ownership metadata, allowing retrieval results to be restricted to the authenticated user.
+
+### Additional Protection
+
+- Configurable CORS
+- Upload size validation
+- Protected administrative endpoints
+- Environment-based secrets
+- No API keys committed to source control
+
+---
+
+# 🧩 Technology Stack
+
+| Category | Technology |
+|---|---|
+| Frontend | React |
+| Language | TypeScript |
+| Build Tool | Vite |
+| UI | Chakra UI |
+| State Management | Zustand |
+| Backend | FastAPI |
+| Language | Python 3.11 |
+| API Server | Uvicorn |
+| Validation | Pydantic |
+| ORM | SQLAlchemy |
+| Authentication | JWT + bcrypt |
+| Vector Search | FAISS |
+| Embeddings | Sentence Transformers |
+| Embedding Model | all-MiniLM-L6-v2 |
+| LLM | Google Gemini 2.5 Flash |
+| LLM SDK | Google GenAI |
+| Database | SQLite |
+| Testing | Pytest |
+| Containerization | Docker |
+| Orchestration | Docker Compose |
+| Reverse Proxy | Nginx |
+
+---
+
+# 📁 Project Structure
+
+```text
 AutoFlow-RAG/
 │
 ├── backend/
@@ -235,24 +434,43 @@ AutoFlow-RAG/
 ├── docker-compose.yml
 ├── render.yaml
 └── README.md
+```
 
-🚀 Getting Started
-Prerequisites
+---
+
+# ⚙️ Local Setup
+
+## Prerequisites
+
 - Python 3.11+
-- Node.js 18+
+- Node.js
 - npm
 - Git
 - Google Gemini API key
 
-1. Clone Repository
+---
+
+## 1. Clone
+
+```bash
 git clone https://github.com/Varunpv2005/AutoFlow-RAG.git
 
 cd AutoFlow-RAG
+```
 
-2. Configure Environment
+---
+
+## 2. Environment Configuration
+
 Create the backend environment file:
+
+```bash
 cp .env.example backend/.env
+```
+
 Configure:
+
+```env
 GEMINI_API_KEY=your_gemini_api_key
 JWT_SECRET_KEY=your_secret_key
 CHAT_RAG_ADMIN_TOKEN=your_admin_token
@@ -261,101 +479,193 @@ CORS_ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5173
 
 GEMINI_MODEL=gemini-2.5-flash
 MAX_UPLOAD_SIZE_MB=25
-Never commit real API keys or secrets to GitHub.
+```
 
-🐍 Backend
+> Never commit real API keys, JWT secrets, or administrative tokens.
+
+---
+
+# 🐍 Backend
+
+```bash
 cd backend
 
 python -m venv venv
-Windows
-venv\Scripts\activate
-Linux / macOS
-source venv/bin/activate
-Install dependencies:
-pip install -r requirements.txt
-Run the API:
-uvicorn app.main:app --reload --port 8000
-Backend:
-http://localhost:8000/api
-Health check:
-http://localhost:8000/api/health
+```
 
-⚛️ Frontend
-Open another terminal:
+### Windows
+
+```bash
+venv\Scripts\activate
+```
+
+### Linux / macOS
+
+```bash
+source venv/bin/activate
+```
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Run the API:
+
+```bash
+uvicorn app.main:app --reload --port 8000
+```
+
+API:
+
+```text
+http://localhost:8000/api
+```
+
+Health check:
+
+```text
+http://localhost:8000/api/health
+```
+
+---
+
+# ⚛️ Frontend
+
+Open a second terminal:
+
+```bash
 cd frontend
 
 npm install
 
 npm run dev
-Frontend:
-http://localhost:5173
+```
 
-🐳 Docker
-Build the application:
+Frontend:
+
+```text
+http://localhost:5173
+```
+
+---
+
+# 🐳 Docker
+
+Build:
+
+```bash
 docker compose build --no-cache
-Start services:
+```
+
+Run:
+
+```bash
 docker compose up -d
+```
+
 Services:
+
+```text
 Frontend → http://localhost:3000
 Backend  → http://localhost:8000/api
+```
 
-☁️ Deployment
-The repository includes render.yaml for cloud deployment.
-Required backend variables
+---
+
+# ☁️ Deployment
+
+The repository includes a `render.yaml` configuration for cloud deployment.
+
+Required backend environment variables:
+
+```text
 GEMINI_API_KEY
 JWT_SECRET_KEY
 CHAT_RAG_ADMIN_TOKEN
 CORS_ALLOWED_ORIGINS
 GEMINI_MODEL
 MAX_UPLOAD_SIZE_MB
-After deployment, configure CORS_ALLOWED_ORIGINS with the actual frontend URL.
+```
 
-🧪 Testing
+After deployment, configure the backend CORS settings with the public frontend URL.
+
+---
+
+# 🧪 Testing
+
 Run the backend test suite:
+
+```bash
 cd backend
-
 pytest
-The project uses Pytest for backend testing and validation of core application functionality.
+```
 
-📌 Engineering Decisions
-Why FAISS?
-FAISS provides efficient local vector similarity search without introducing the operational complexity of a separate vector database.
-Why local embeddings?
-all-MiniLM-L6-v2 allows document embeddings to be generated locally, reducing dependence on external embedding APIs.
-Why FastAPI?
-FastAPI provides strong request validation, automatic API documentation, asynchronous support, and natural integration with Python AI/ML libraries.
-Why Gemini?
-Gemini 2.5 Flash provides the generation layer for producing grounded responses from retrieved document context.
-Why SSE?
-SSE allows the backend to stream generated responses incrementally to the frontend instead of waiting for the complete response.
+The project uses **Pytest** to validate backend functionality and application behavior.
 
-⚠️ Current Limitations
-AutoFlow-RAG is designed as a deployment-oriented application, but several components can be further scaled.
-- FAISS is currently locally persisted.
+---
+
+# 📊 Observability
+
+The workspace provides operational visibility through:
+
+- Document counts
+- Chunk counts
+- Conversation statistics
+- Index health
+- Retrieval metrics
+- Database status
+- FAISS status
+- Gemini service status
+- Workspace allocation
+
+This allows the application to expose both **user-facing RAG functionality** and **basic system health information**.
+
+---
+
+# ⚠️ Current Limitations
+
+The current implementation is optimized for a lightweight, deployment-oriented architecture.
+
+- FAISS is locally persisted rather than distributed.
 - SQLite is used for application metadata.
-- Very large documents may require background processing.
-- Retrieval quality depends on chunking and embedding configuration.
+- Very large document collections would require scalable storage and indexing.
+- Retrieval quality depends on chunking, embeddings, and search configuration.
 - Large-scale production deployment would benefit from PostgreSQL and a distributed vector database.
 
-🔮 Future Improvements
-- PostgreSQL for production metadata storage
+---
+
+# 🔮 Future Improvements
+
+- PostgreSQL migration
 - Distributed vector database
 - Hybrid keyword + semantic retrieval
 - Cross-encoder reranking
 - Background document processing
 - Automated RAG evaluation
-- OpenTelemetry-based observability
+- OpenTelemetry integration
 - CI/CD pipeline
 - Document versioning
-- Advanced source citations
+- Advanced citation generation
 - Kubernetes deployment
 
-🎯 What This Project Demonstrates
-AutoFlow-RAG demonstrates practical experience with:
-Full-Stack Development • RAG • Semantic Search • Vector Retrieval • LLM Integration • REST APIs • Authentication • Authorization • Streaming • Document Processing • Testing • Docker • Cloud Deployment
+---
 
-📜 License
+# 🎯 Engineering Highlights
+
+This project demonstrates practical implementation of:
+
+**RAG Architecture • Semantic Search • Vector Retrieval • LLM Integration • Document Processing • REST APIs • JWT Authentication • Authorization • SSE Streaming • Persistent Chat • Observability • Docker • Testing • Cloud Deployment**
+
+---
+
+# 📜 License
+
 MIT License
 
-🔗 Repository
-GitHub — AutoFlow-RAG
+---
+
+# 🔗 Repository
+
+[GitHub — AutoFlow-RAG](https://github.com/Varunpv2005/AutoFlow-RAG)
